@@ -20,6 +20,7 @@ export async function getStaticProps() {
   /* process.cwd = root directory, then you add in arguments for where you wanna go,
     then the name of the file. You can add as many arguments as you want.
   */
+  console.log('(Re-)Generating...');
   const filePath = path.join(process.cwd(), 'data', 'dummy-backend.json');
   const jsonData = await fs.readFile(filePath);
   const data = JSON.parse(jsonData);
@@ -28,5 +29,6 @@ export async function getStaticProps() {
     props: {
       products: data.products,
     },
+    revalidate: 10,
   };
 }
