@@ -1,3 +1,8 @@
+//import fs to use files
+import fs from 'fs/promises';
+//import path to read pathing
+import path from 'path';
+
 export default function HomePage(props) {
   const { products } = props;
   return (
@@ -10,9 +15,18 @@ export default function HomePage(props) {
 }
 
 export async function getStaticProps() {
+  // constructing a path for the ReadFile to read file
+  // cwd = current working directory
+  /* process.cwd = root directory, then you add in arguments for where you wanna go,
+    then the name of the file. You can add as many arguments as you want.
+  */
+  const filePath = path.join(process.cwd(), 'data', 'dummy-backend.json');
+  const jsonData = await fs.readFile(filePath);
+  const data = JSON.parse(jsonData);
+
   return {
     props: {
-      products: [{ id: 'p1', title: 'Product 1' }],
+      products: data.products,
     },
   };
 }
