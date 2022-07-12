@@ -1,5 +1,6 @@
 //import fs to use files
 import fs from 'fs/promises';
+import Link from 'next/link';
 //import path to read pathing
 import path from 'path';
 
@@ -8,7 +9,9 @@ export default function HomePage(props) {
   return (
     <ul>
       {products.map((product) => (
-        <li key={product.id}>{product.title}</li>
+        <li key={product.id}>
+          <Link href={`/${product.id}`}>{product.title}</Link>
+        </li>
       ))}
     </ul>
   );
@@ -35,7 +38,7 @@ export async function getStaticProps(context) {
   }
 
   // if you fail to fetch data, you'll get the 404 not found page
-  if (data.product.length === 0) {
+  if (data.products.length === 0) {
     return {
       notFound: true,
     };
