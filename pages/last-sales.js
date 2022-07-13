@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 
-export default function LastSalesPage() {
-  const [sales, setSales] = useState();
+export default function LastSalesPage(props) {
+  const [sales, setSales] = useState(props.sales);
   //   const [isLoading, setIsLoading] = useState(false);
 
   const fetcher = (url) => fetch(url).then((r) => r.json());
@@ -27,33 +27,11 @@ export default function LastSalesPage() {
     }
   }, [data]);
 
-  //   useEffect(() => {
-  //     setIsLoading(true);
-  //     fetch(
-  //       'https://nextjs-course-9b48b-default-rtdb.europe-west1.firebasedatabase.app/sales.json'
-  //     )
-  //       .then((Response) => Response.json())
-  //       .then((data) => {
-  //         // converting the data to array
-  //         const transformedSales = [];
-  //         // for every key in data
-  //         for (const key in data) {
-  //           transformedSales.push({
-  //             id: key,
-  //             username: data[key].username,
-  //             volume: data[key].volume,
-  //           });
-  //         }
-  //         setSales(transformedSales);
-  //         setIsLoading(false);
-  //       });
-  //   }, []);
-
   if (error) {
     return <p>Failed to load</p>;
   }
 
-  if (!data || !sales) {
+  if (!data && !sales) {
     return <p>Loading...</p>;
   }
 
@@ -71,4 +49,25 @@ export default function LastSalesPage() {
       ))}
     </ul>
   );
+}
+
+export async function getStaticProps() {
+  return fetch(
+    'https://nextjs-course-9b48b-default-rtdb.europe-west1.firebasedatabase.app/sales.json'
+  )
+    .then((Response) => Response.json())
+    .then((data) => {
+      // converting the data to array
+      const transformedSales = [];
+      // for every key in data
+      for (const key in data) {
+        transformedSales.push({
+          id: key,
+          username: data[key].username,
+          volume: data[key].volume,
+        });
+      }
+
+      return { props: { sales: transformedSales } };
+    });
 }
